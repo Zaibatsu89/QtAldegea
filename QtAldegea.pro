@@ -33,12 +33,6 @@ FORMS += \
 TRANSLATIONS += \
     i18n/QtAldegea_nl_NL.ts
 
-# Define the Qt Resource file
-# This file lists resources to be embedded into the executable,
-# including the compiled .qm translation files.
-RESOURCES += \
-    $$PWD/translations.qrc
-
 # --- Optional Settings (mirrored from CMakeLists.txt comments/defaults) ---
 
 # Define version information (similar to PROJECT_VERSION)
