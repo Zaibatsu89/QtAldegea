@@ -27,6 +27,7 @@ signals:
     void scanError(const QString &error); // Signaal voor fouten tijdens het scannen
     void statusChanged(const QString &status); // Signaal voor statuswijzigingen
     void scanningChanged(bool scanning); // Signaal voor wijzigingen in de scanstatus
+    void scanningUnavailable(); // Signal to indicate bluetooth is unavailable
 
 
 private slots:
