@@ -77,7 +77,7 @@ void BluetoothScanner::stopScan()
 void BluetoothScanner::handleDeviceDiscovered(const QBluetoothDeviceInfo &deviceInfo)
 {
     // Filter eventueel ongewenste apparaten (bv. zonder naam of niet Low Energy)
-    if (!deviceInfo.isValid() || !deviceInfo.name().trimmed().isEmpty())
+    if (deviceInfo.isValid() && !deviceInfo.name().trimmed().isEmpty() && (deviceInfo.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration))
     {
         // Optioneel: voorkom dubbele signalen voor hetzelfde apparaat in één scan
         QString identifier = deviceInfo.address().toString();
