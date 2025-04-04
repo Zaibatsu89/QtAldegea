@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt6 COMPONENTS Widgets Bluetooth REQUIRED)
 
 # Stel Qt policies in
 qt_policy(SET QTP0002 NEW)
@@ -20,6 +21,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        drivers/bluetoothscanner.cpp
+        drivers/bluetoothscanner.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -73,6 +76,7 @@ endif()
 add_custom_target(global_lupdate DEPENDS update_translations)
 
 target_link_libraries(QtAldegea PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QtAldegea PRIVATE Qt6::Widgets Qt6::Bluetooth) # Bluetooth toevoegen
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

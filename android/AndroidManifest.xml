@@ -5,12 +5,24 @@
 	<application android:label="@string/app_name" android:hasCode="true">
 	        <activity android:name="org.qtproject.qt.android.bindings.QtActivity" android:label="@string/app_name" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:launchMode="singleTop" android:screenOrientation="unspecified" android:exported="true">
 		<intent-filter>
-		        <action android:name="android.intent.action.MAIN"/>
+	                <action android:name="android.intent.action.MAIN"/>
 			<category android:name="android.intent.category.LAUNCHER"/>
 		</intent-filter>
 		<meta-data android:name="android.app.lib_name" android:value="QtAldegea"/>
-		<meta-data android:name="android.app.arguments" android:value=""/>
-		<meta-data android:name="android.app.extract_android_style" android:value="minimal"/>
+	    <meta-data android:name="android.app.arguments" android:value=""/>
+	    <meta-data android:name="android.app.extract_android_style" android:value="minimal"/>
 	</activity>
 	</application>
+
+	<!-- Algemene Bluetooth Permissies (Nodig) -->
+	<uses-permission android:name="android.permission.BLUETOOTH"/>
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+	<!-- === Permissies voor Android 12 (API 31) en hoger === -->
+	<uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+
+	<!-- === Permissies voor Android 6 t/m 11 (API 23-30) === -->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30"/>
 </manifest>
