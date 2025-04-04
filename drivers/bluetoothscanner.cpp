@@ -4,12 +4,12 @@
 BluetoothScanner::BluetoothScanner(QObject *parent) : QObject(parent)
 {
     m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
-    if (!m_discoveryAgent->isValid()) {
         emit statusChanged("Error: Bluetooth is niet beschikbaar op dit apparaat.");
         emit scanError("Bluetooth is niet beschikbaar.");
         qWarning() << "Bluetooth is niet beschikbaar op dit apparaat.";
         delete m_discoveryAgent; // Voorkom verdere problemen
         m_discoveryAgent = nullptr;
+        emit scanningUnavailable(); // Signal to disable scanning button in UI
         return;
     }
 
