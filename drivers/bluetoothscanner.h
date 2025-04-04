@@ -37,7 +37,7 @@ private slots:
     void handleScanError(QBluetoothDeviceDiscoveryAgent::Error error);
 
 private:
-    QBluetoothDeviceDiscoveryAgent *m_discoveryAgent; // Agent voor het ontdekken van Bluetooth-apparaten
+    QBluetoothDeviceDiscoveryAgent *m_discoveryAgent = nullptr; // Agent voor het ontdekken van Bluetooth-apparaten
     QStringList m_deviceList; // Lijst van ontdekte apparaten
     bool m_scanning; // Huidige scanstatus
 };

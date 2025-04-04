@@ -76,6 +76,7 @@ endif()
 add_custom_target(global_lupdate DEPENDS update_translations)
 
 target_link_libraries(QtAldegea PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(QtAldegea PRIVATE Qt6::Widgets Qt6::Bluetooth) # Bluetooth toevoegen
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

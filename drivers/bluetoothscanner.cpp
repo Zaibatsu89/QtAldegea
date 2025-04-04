@@ -4,6 +4,7 @@
 BluetoothScanner::BluetoothScanner(QObject *parent) : QObject(parent)
 {
     m_discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
+    if (!m_discoveryAgent) { // Check ook of new gefaald is
         emit statusChanged("Error: Bluetooth is niet beschikbaar op dit apparaat.");
         emit scanError("Bluetooth is niet beschikbaar.");
         qWarning() << "Bluetooth is niet beschikbaar op dit apparaat.";
@@ -13,14 +14,12 @@ BluetoothScanner::BluetoothScanner(QObject *parent) : QObject(parent)
         return;
     }
 
-    m_discoveryAgent->setInquiryType(QBluetoothDeviceDiscoveryAgent::GeneralUnlimitedInquiry);
-    
     // Verbind de signalen van de agent met onze interne slots
     connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered, this, &BluetoothScanner::deviceDiscovered);
     connect(m_discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, &BluetoothScanner::scanFinished);
     // Gebruik de nieuwe connect-syntax voor overloaded signalen
     connect(m_discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::errorOccurred),
-            this, &BluetoothScanner::scanError);
+            this, &BluetoothScanner::handleScanError);
 
     emit statusChanged("Klaar om te scannen.");
 }
@@ -44,22 +43,16 @@ void BluetoothScanner::startScan()
         return;
     }
 
-    if (m_isScanning) {
+    if (m_scanning) {
         qDebug() << "Scan already in progress, ignoring start request.";
         return; // Al aan het scannen
     }
 
-    m_discoveredDevices.clear(); // Reset lijst voor nieuwe scan
+    m_deviceList.clear(); // Reset lijst voor nieuwe scan
     emit statusChanged("Scannen naar apparaten...");
-    m_isScanning = true;
+    m_scanning = true;
     emit scanningChanged(true); // Laat UI weten dat scan start
-    if (!m_discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod)) { // Start scan (of gebruik ClassicMethod)
-        emit statusChanged("Error: Failed to start scan.");
-        emit scanError("Failed to start scan.");
-        m_isScanning = false;
-        emit scanningChanged(false);
-        return;
-    }
+    m_discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod); // Start scan (of gebruik ClassicMethod)
 
     // Optioneel: Voeg een timeout toe voor het geval finished() nooit komt
     // QTimer::singleShot(30000, this, &BluetoothScanner::stopScan); // Stop na 30s
@@ -67,7 +60,7 @@ void BluetoothScanner::startScan()
 
 void BluetoothScanner::stopScan()
 {
-     if (!m_discoveryAgent || !m_isScanning) {
+     if (!m_discoveryAgent || !m_scanning) {
         return;
     }
     m_discoveryAgent->stop();
@@ -81,20 +74,20 @@ void BluetoothScanner::handleDeviceDiscovered(const QBluetoothDeviceInfo &device
     {
         // Optioneel: voorkom dubbele signalen voor hetzelfde apparaat in één scan
         QString identifier = deviceInfo.address().toString();
-        if (!m_discoveredDevices.contains(identifier)) {
-             m_discoveredDevices.append(identifier);
+        if (!m_deviceList.contains(identifier)) {
+             m_deviceList.append(identifier);
               qDebug() << "Apparaat gevonden:" << deviceInfo.name() << "(" << deviceInfo.address().toString() << ")";
-              emit deviceFound(deviceInfo); // Stuur door naar MainWindow
+              emit deviceDiscovered(deviceInfo); // Stuur door naar MainWindow
         }
     }
 }
 
 void BluetoothScanner::handleScanFinished()
 {
-    if (!m_isScanning) return; // Voorkom afhandeling als we niet actief waren
+    if (!m_scanning) return; // Voorkom afhandeling als we niet actief waren
 
     qDebug() << "Scan voltooid.";
-    m_isScanning = false;
+    m_scanning = false;
     emit scanningChanged(false); // Laat UI weten dat scan stopt
     emit statusChanged("Scan voltooid.");
     emit scanFinished(); // Stuur door naar MainWindow
@@ -125,7 +118,7 @@ void BluetoothScanner::handleScanError(QBluetoothDeviceDiscoveryAgent::Error err
         break;
     }
     qWarning() << "Scan Error:" << errorMessage;
-    m_isScanning = false;
+    m_scanning = false;
     emit scanningChanged(false); // Laat UI weten dat scan stopt
     emit statusChanged("Fout: " + errorMessage);
     emit scanError(errorMessage); // Stuur door naar MainWindow

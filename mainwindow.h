@@ -21,6 +21,9 @@ public:
     ~MainWindow();
 
 private slots:
+    // Slot voor het controleren van permissies
+    bool checkAndRequestBluetoothPermissions();
+
     // Slot voor de scan knop
     void on_scanButton_clicked();
 
@@ -38,5 +41,6 @@ private:
 
     void setupUiConnections(); // Helper functie voor connecties
     void setupStatusLabel();   // Helper functie om status label te initialiseren
+    void disableScanButton();
 };
 #endif // MAINWINDOW_H
