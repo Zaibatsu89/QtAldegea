@@ -41,7 +41,9 @@ void MainWindow::setupUiConnections()
     connect(m_scanner, &BluetoothScanner::scanFinished, this, &MainWindow::onScanFinished);
     connect(m_scanner, &BluetoothScanner::scanError, this, &MainWindow::onScanError);
     connect(m_scanner, &BluetoothScanner::statusChanged, this, &MainWindow::updateStatusLabel);
+    connect(m_scanner, &BluetoothScanner::statusChanged, this, &MainWindow::updateStatusLabel);
     connect(m_scanner, &BluetoothScanner::scanningChanged, this, &MainWindow::updateScanButtonState);
+    connect(m_scanner, &BluetoothScanner::scanningUnavailable, this, &MainWindow::disableScanButton);
 }
 
 void MainWindow::on_scanButton_clicked()
