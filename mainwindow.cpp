@@ -107,4 +107,12 @@ void MainWindow::updateStatusLabel(const QString &statusMessage)
 void MainWindow::updateScanButtonState(bool isScanning)
 {
      ui->scanButton->setEnabled(!isScanning); // Schakel knop uit tijdens scan
+void MainWindow::updateScanButtonState(bool isScanning)
+{
+     ui->scanButton->setEnabled(!isScanning); // Schakel knop uit tijdens scan
+}
+
+void MainWindow::disableScanButton()
+{
+    ui->scanButton->setEnabled(false);
 }
