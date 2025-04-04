@@ -45,6 +45,7 @@ void BluetoothScanner::startScan()
     }
 
     if (m_isScanning) {
+        qDebug() << "Scan already in progress, ignoring start request.";
         return; // Al aan het scannen
     }
 
