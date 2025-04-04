@@ -53,7 +53,13 @@ void BluetoothScanner::startScan()
     emit statusChanged("Scannen naar apparaten...");
     m_isScanning = true;
     emit scanningChanged(true); // Laat UI weten dat scan start
-    m_discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod); // Start scan (of gebruik ClassicMethod)
+    if (!m_discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod)) { // Start scan (of gebruik ClassicMethod)
+        emit statusChanged("Error: Failed to start scan.");
+        emit scanError("Failed to start scan.");
+        m_isScanning = false;
+        emit scanningChanged(false);
+        return;
+    }
 
     // Optioneel: Voeg een timeout toe voor het geval finished() nooit komt
     // QTimer::singleShot(30000, this, &BluetoothScanner::stopScan); // Stop na 30s
